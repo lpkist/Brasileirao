@@ -1,4 +1,5 @@
 #' @import shiny
+#' @import tidyverse
 #' @import shinydashboard
 #' @import glue
 #' @import keys
@@ -10,7 +11,7 @@ app <- function(){
   source(file.path("R","geral.R"))
   source(file.path("R","time.R"))
   source(file.path("R","tecnico.R"))
-
+  data("brasileirao")
   cores = c("#21A366", "#21A366", "#21A366", "#185C37", "#10793F",
             "#10793F", "#185C37", "#10793F", "#3A3A3A", "white", "#33c481")
 
@@ -111,40 +112,40 @@ app <- function(){
         tabItem(tabName = "Confrontos",
                 fluidPage(
                   fluidRow(
-                    #tab_titulo
+                    tab_confrontos
                   )
                 )
         ),
         tabItem(tabName = "Time",
                 fluidPage(
-                  #tab_explicacao
+                  tab_time
                 )
         ),
         tabItem(tabName = "Campeonato",
                 fluidPage(
                   fluidRow(
-                    #tab_introducao
+                    tab_campeonato
                   )
                 )
         ),
         tabItem(tabName = "Técnico",
                 fluidPage(
                   fluidRow(
-                    #tab_contexto
+                    tab_tecnico
                   )
                 )
         ),
         tabItem(tabName = "Árbitro",
                 fluidPage(
                   fluidRow(
-                    #tab_serie_fechamento
+                    tab_arbitro
                   )
                 )
         ),
         tabItem(tabName = "Geral",
                 fluidPage(
                   fluidRow(
-                    #tab_serie_retorno
+                    tab_geral
                   )
                 )
         )
