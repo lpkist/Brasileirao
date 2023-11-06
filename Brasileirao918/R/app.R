@@ -159,6 +159,18 @@ app <- function(){
 
   ## ---------------------------------------------
   server <- function(input, output, session) {
+
+    tecnicos <- reactive(input$tecnico)
+
+    output$top_pontos <- renderPlot({
+      tab_tecnico <- tecnic(tecnico = tecnicos())
+      tab_tecnico$plot_pontos})
+    output$top_aproveitamentos <- renderPlot({
+      tab_tecnico <- tecnic(tecnico = tecnicos())
+      tab_tecnico$plot_aprov})
+
+
+
     ##Mover o slide com as setas do teclado#######################
     id_tab = reactiveVal(1)
     observeEvent(input$keys, {

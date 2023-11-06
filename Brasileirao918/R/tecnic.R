@@ -1,13 +1,14 @@
 #' @import tidyverse
 tecnic <- function(tecnico = "Renato Portaluppi"){
+  library(tidyverse)
 tab_tecnico <- column(12,
                       h1("Técnico"),
                       selectInput(inputId = "tecnico",
                                   label = "Selecione o técnico",
                                   choices = sort(unique(rbind(brasileirao$tecnico_mandante, brasileirao$tecnico_visitante))),
                                   selected = tecnico, multiple = T),
-                      plotOutput("top_pontos"),
-                      plotOutput("top_aproveitamentos")
+                      plotOutput("top_pontos", width = 600, height = 450),
+                      plotOutput("top_aproveitamentos", width = 600, height = 450)
                       # Conteúdo do Slide de Modelos aqui
 )
 
@@ -45,6 +46,7 @@ plot_aprov <- aproveitamento %>%
   geom_bar(stat = "identity", show.legend = F)+
   coord_flip()+
   theme_bw()+
+  theme(text = element_text(size=17))+
   labs(y = "Aproveitamento", x = "Time")+
   scale_y_continuous(breaks = seq(0, 1, by = .2),
                      labels = paste0(100*seq(0, 1, by = .2),"%"))
@@ -54,6 +56,7 @@ plot_pontos <- aproveitamento %>%
   geom_bar(stat = "identity", show.legend = F)+
   coord_flip()+
   theme_bw()+
+  theme(text = element_text(size=17))+
   labs(y = "Pontos", x = "Time")
 
 return(list(tab_tecnico = tab_tecnico,
