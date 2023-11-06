@@ -19,7 +19,7 @@
 #' @export
 
 grafico <- function(dados, x=NULL, y = NULL, color = NULL, fill = NULL, group = NULL, tipo = "hist", tema = 1){
-  if(!(x%in%colnames(dados)|is.null(x))) stop("x não é uma coluna de dados")
+  if(!(is.null(x)||x%in%colnames(dados))) stop("x não é uma coluna de dados")
   if(!(is.null(y)||y%in%colnames(dados))) stop("y não é uma coluna de dados")
   if(!(is.null(color)||color%in%colnames(dados))) stop("color não é uma coluna de dados")
   if(!(is.null(fill)||fill%in%colnames(dados))) stop("fill não é uma coluna de dados")

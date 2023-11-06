@@ -5,15 +5,15 @@
 #' @import keys
 #' @export
 app <- function(){
-  source(file.path("R","arbitro.R"))
-  source(file.path("R","campeonato.R"))
-  source(file.path("R","confrontos.R"))
-  source(file.path("R","geral.R"))
-  source(file.path("R","time.R"))
-  source(file.path("R","tecnico.R"))
-  data("brasileirao")
+  tab_arbitro <- arbitro()
+  tab_campeonato <- campeonato()
+  tab_confrontos <- confrontos()
+  tab_geral <- geral()
+  tab_time <- time()
+  tab_tecnico <- tecnic()
+
   cores = c("#21A366", "#21A366", "#21A366", "#185C37", "#10793F",
-            "#10793F", "#185C37", "#10793F", "#3A3A3A", "white", "#33c481")
+            "#10793F", "#185C37", "#10793F", "#3A3A3A", "white", "#33c481", "black")
 
   ###Ignore
   tosupress = paste0("a#ui-tab-",1:1000, collapse = ", ")
@@ -62,12 +62,12 @@ app <- function(){
 /* FONTES, SE FOR MUDAR, MUDA TUDO DE UMA VEZ */
 .content-wrapper,
 .right-side, * {
-    color:  <cores[10] >;}
+    color:  <cores[12] >;}
 .content-wrapper,
 .right-side, h1, h2, h3, h4, h5,
 .c1, .c2, .c3, .c4, .c5, .c6,
 .c7, .c8, .c9, .c10, .active{
-    color:  <cores[10] > !important;}
+    color:  <cores[12] > !important;}
 .content-wrapper,
 .right-side,  <tosupress >{
     color:  <cores[11] >;}
@@ -131,7 +131,7 @@ app <- function(){
         tabItem(tabName = "Técnico",
                 fluidPage(
                   fluidRow(
-                    tab_tecnico
+                    tab_tecnico$tab_tecnico
                   )
                 )
         ),
