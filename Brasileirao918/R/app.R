@@ -161,6 +161,40 @@ app <- function(){
   server <- function(input, output, session) {
 
     tecnicos <- reactive(input$tecnico)
+    time1 <- reactive(input$time1)
+    time2 <- reactive(input$time2)
+    periodo <- reactive(input$periodo_conf)
+
+    output$historico_conf <- renderTable({
+      #periodo <- c(2003,2023)
+      res <- brasileirao %>% mutate(resultado =
+                                      ifelse(gols_mandante > gols_visitante,
+                                             "Vitória",
+                                             ifelse(gols_mandante == gols_visitante,
+                                                    "Empate", "Derrota"))) %>%
+        select(ano_campeonato, time_mandante, time_visitante,
+               gols_mandante, gols_visitante, resultado)
+
+      MV <- res %>% filter(ano_campeonato %in% periodo()[1]:periodo()[2],
+                           time_mandante == time1(),
+                           time_visitante == time2())
+      VM <- res %>% filter(ano_campeonato %in% periodo()[1]:periodo()[2],
+                           time_mandante == time2(),
+                           time_visitante == time1()) %>%
+        mutate(resultado = ifelse(resultado == "Vitória", "Derrota",
+                                  ifelse(resultado == "Derrota", "Vitória", "Empate")))
+
+      conf_df <- rbind(MV, VM)
+      conf_df %>% mutate(resultado = factor(resultado,
+                                                         levels = c("Vitória", "Empate", "Derrota"),
+                                                         labels = c(paste("Vitórias do", time1()), "Empates", paste("Vitórias do", time2())), ordered = T)) %>%
+        group_by(resultado) %>% summarise(n = n()) %>% pivot_wider(names_from = "resultado", values_from = "n")
+    }, striped = T)
+
+    # output$gols_conf <- renderTable({
+    #   res_conf <- confrontos(time1(), time2())
+    #   pivot_wider(res_conf$gols_conf, id_cols = 1)
+    # })
 
     output$top_pontos <- renderPlot({
       tab_tecnico <- tecnic(tecnico = tecnicos())
