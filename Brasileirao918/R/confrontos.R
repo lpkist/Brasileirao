@@ -18,32 +18,33 @@ confrontos <- function(time1 = "Grêmio", time2 = "Internacional", periodo= c(20
                                   value = c(2003,2023),
                                   step = 1, sep = ""),
                       tableOutput("historico_conf"),
-                      tableOutput("gols_conf")
+                      tableOutput("gols_conf"),
+                      tableOutput("jogos_s_gols")
 
 
 )
-  res <- brasileirao %>% mutate(resultado =
-                                  ifelse(gols_mandante > gols_visitante,
-                                         "Vitória",
-                                         ifelse(gols_mandante == gols_visitante,
-                                                "Empate", "Derrota"))) %>%
-    select(ano_campeonato, time_mandante, time_visitante,
-           gols_mandante, gols_visitante, resultado)
-
-  MV <- res %>% filter(ano_campeonato %in% periodo[1]:periodo[2],
-                               time_mandante == time1,
-                               time_visitante == time2)
-  VM <- res %>% filter(ano_campeonato %in% periodo[1]:periodo[2],
-                               time_mandante == time2,
-                               time_visitante == time1) %>%
-    mutate(resultado = ifelse(resultado == "Vitória", "Derrota",
-                              ifelse(resultado == "Derrota", "Vitória", "Empate")))
-
-  conf_df <- rbind(MV, VM)
-  hist_conf <- conf_df %>% mutate(resultado = factor(resultado,
-                                      levels = c("Vitória", "Empate", "Derrota"),
-                                      labels = c(paste("Vitórias do", time1), "Empates", paste("Vitórias do", time2)), ordered = T)) %>%
-  group_by(resultado) %>% summarise(n = n(),.groups = "drop") #%>%
+  # res <- brasileirao %>% mutate(resultado =
+  #                                 ifelse(gols_mandante > gols_visitante,
+  #                                        "Vitória",
+  #                                        ifelse(gols_mandante == gols_visitante,
+  #                                               "Empate", "Derrota"))) %>%
+  #   select(ano_campeonato, time_mandante, time_visitante,
+  #          gols_mandante, gols_visitante, resultado)
+  #
+  # MV <- res %>% filter(ano_campeonato %in% periodo[1]:periodo[2],
+  #                              time_mandante == time1,
+  #                              time_visitante == time2)
+  # VM <- res %>% filter(ano_campeonato %in% periodo[1]:periodo[2],
+  #                              time_mandante == time2,
+  #                              time_visitante == time1) %>%
+  #   mutate(resultado = ifelse(resultado == "Vitória", "Derrota",
+  #                             ifelse(resultado == "Derrota", "Vitória", "Empate")))
+  #
+  # conf_df <- rbind(MV, VM)
+  # hist_conf <- conf_df %>% mutate(resultado = factor(resultado,
+  #                                     levels = c("Vitória", "Empate", "Derrota"),
+  #                                     labels = c(paste("Vitórias do", time1), "Empates", paste("Vitórias do", time2)), ordered = T)) %>%
+  # group_by(resultado) %>% summarise(n = n(),.groups = "drop") #%>%
   #ggplot(aes(x = 0, y = n, fill = resultado))#+
   #geom_bar(stat = "identity", show.legend = F)+
   # coord_flip()+
