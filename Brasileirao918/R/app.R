@@ -168,6 +168,17 @@ app <- function(){
     time2 <- reactive(input$time2)
     periodo <- reactive(input$periodo_conf)
 
+
+    ################# Atualiza times
+    observe({
+    times <- unique(brasileirao$time_visitante)
+
+          # Change values for input$inSelect
+          updateSelectInput(session, "time2", choices = times[times != time1()], selected = time2())
+      updateSelectInput(session, "time1", choices = times[times != time2()], selected = time1())
+})
+
+
     ######### TABELAS ###################
     output$historico_conf <- renderTable({
       res <- brasileirao %>% mutate(resultado =
