@@ -18,7 +18,8 @@ tab_arbitro <- fluidRow(column(2,
                        tableOutput("FaltasAp"),
                        h3("Análise Por Temporada Escolhida"),
                        tableOutput("GolsApTemp"),
-                       tableOutput("FaltasApTemp"))
+                       tableOutput("FaltasApTemp"),
+                       tableOutput("TimesApTemp"))
 )
 
 return(list(tab_arbitro = tab_arbitro))
@@ -47,7 +48,8 @@ return(list(tab_arbitro = tab_arbitro))
 # GolsAp <- brasileirao %>% filter(arbitro == "Alexandre Vargas Tavares") %>%
 #   summarise(gols = sum(gols_mandante+gols_visitante))
 
-# FaltasAp <- brasileirao %>% filter(arbitro == "Leandro Pedro Vuaden") %>%
+# FaltasAp <- brasileirao %>% filter(arbitro == "Leandro Pedro Vuaden", ano_campeonato == 2021) %>%
+#   #nrow()
 #   drop_na() %>%
 #   summarise(faltasTot = sum(faltas_mandante+faltas_visitante),
 #             faltasMedia = mean(faltas_mandante+faltas_visitante))
@@ -61,7 +63,7 @@ return(list(tab_arbitro = tab_arbitro))
 #                   "Vitória",
 #                   ifelse(gols_mandante == gols_visitante,
 #                          "Empate", "Derrota"))) %>%
-#   select(ano_campeonato, time_mandante, time_visitante,
+#   select(ano_campeonato, time_mandante, time_visitante, arbitro,
 #          rodada, resultado, gols_mandante, gols_visitante)
 # M <- res %>% select(-time_visitante) %>% mutate(time = time_mandante, gols = gols_mandante, gols_sof = gols_visitante) %>%
 #   select(-time_mandante, -gols_mandante, -gols_visitante)
@@ -74,7 +76,7 @@ return(list(tab_arbitro = tab_arbitro))
 # final <- jogos %>% mutate(pontos = ifelse(resultado == "Vitória", 3,
 #                                           ifelse(resultado == "Empate", 1, 0))) %>%
 #   group_by(time) %>% arrange(rodada) %>% mutate(total = cumsum(pontos), vitorias = sum(resultado == "Vitória"), gols_marcados = cumsum(gols), gols_sof = cumsum(gols_sof), sg = gols_marcados - gols_sof)
-#
+
 # fim <- c()
 # for(i in 1:38){
 #   rod <- final %>% filter(rodada == i) %>% arrange(-total,-vitorias,-sg,gols_marcados) %>% cbind(colocacao = c(1:20))
@@ -83,6 +85,7 @@ return(list(tab_arbitro = tab_arbitro))
 # final <- fim
 #
 #
-# timesVitAno <- final %>% filter(arbitro == "Leandro Pedro Vuaden") %>%
-#   group_by(time) %>%
-#   count(resultado) %>% arrange(-n)
+# timesApAno <- final %>% filter(arbitro == "Leandro Pedro Vuaden") %>%
+#   count(time) %>% arrange(-n) %>% rename("Jogos Apitados" = "n")
+#
+# timesApAno[1:5,]
