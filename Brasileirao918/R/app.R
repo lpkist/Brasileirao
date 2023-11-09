@@ -167,7 +167,8 @@ app <- function(){
     time1 <- reactive(input$time1)
     time2 <- reactive(input$time2)
     periodo <- reactive(input$periodo_conf)
-
+    anoArbitro <- reactive(input$AnoArbitro)
+    arbitros <- reactive(input$arbitro)
 
     ################# Atualiza times
     observe({
@@ -255,6 +256,7 @@ app <- function(){
       colnames(aux) <- c("Jogos sem sofrer gols", "Jogos sem sofrer gols")
       aux
     }, striped = T)
+    ############### GRÁFICOS
     output$top_pontos <- renderPlot({
       tab_tecnico <- tecnic(tecnico = tecnicos())
       tab_tecnico$plot_pontos})
@@ -263,7 +265,69 @@ app <- function(){
       tab_tecnico$plot_aprov})
 
 ####################### FIm do confrontos ###############
+    output$GolsAp <- renderTable({brasileirao %>%
+        filter(arbitro == arbitros()) %>%
+        summarise(gols = sum(gols_mandante+gols_visitante),
+                  MediaGols = mean(gols_mandante+gols_visitante))
+    }, striped = T)
+    output$Top5EstAp <- renderPlot({
+      top5est <- brasileirao %>%
+        filter(arbitro == arbitros()) %>%
+        count(estadio) %>% arrange(-n) %>% top_n(n, n = 5)
+      top5est[1:5,] %>%
+        ggplot(aes(x = estadio, y = n), fill = "blue")+
+        geom_bar(stat = "identity")+
+        labs(x = "Estadio", y = "Jogos Apitados")+theme_bw()
+    })
+    output$FaltasAp <- renderTable({
+      brasileirao %>% filter(arbitro == arbitros()) %>%
+        drop_na() %>%
+        summarise(faltasTot = sum(faltas_mandante+faltas_visitante),
+                  faltasMedia = mean(faltas_mandante+faltas_visitante))
+    }, striped = T)
+    output$GolsApTemp <- renderTable({
+      brasileirao %>% filter(arbitro == arbitros(),
+                             ano_campeonato == anoArbitro()) %>%
+        summarise(gols = sum(gols_mandante+gols_visitante),
+                  MediaGols = mean(gols_mandante+gols_visitante))
+    }, striped = T)
+    output$FaltasApTemp <- renderTable({
+      brasileirao %>% filter(arbitro == arbitros(),
+                             ano_campeonato == anoArbitro()) %>%
+        drop_na() %>%
+        summarise(faltasTot = sum(faltas_mandante+faltas_visitante),
+                  faltasMedia = mean(faltas_mandante+faltas_visitante))
+    }, striped = T)
+    output$TimesApTemp <- renderTable({
+      res <- brasileirao %>% filter(ano_campeonato == anoArbitro()) %>%
+        mutate(resultado =
+                 ifelse(gols_mandante > gols_visitante,
+                        "Vitória",
+                        ifelse(gols_mandante == gols_visitante,
+                               "Empate", "Derrota"))) %>%
+        select(ano_campeonato, time_mandante, time_visitante, arbitro,
+               rodada, resultado, gols_mandante, gols_visitante)
+      M <- res %>% select(-time_visitante) %>% mutate(time = time_mandante, gols = gols_mandante, gols_sof = gols_visitante) %>%
+        select(-time_mandante, -gols_mandante, -gols_visitante)
+      V <- res %>% select(-time_mandante) %>%
+        mutate(resultado = ifelse(resultado == "Vitória", "Derrota",
+                                  ifelse(resultado == "Derrota", "Vitória", "Empate")),
+               time = time_visitante, gols = gols_visitante,
+               gols_sof = gols_mandante) %>% select(-time_visitante, -gols_visitante, -gols_mandante)
+      jogos <- rbind(M,V)
+      final <- jogos %>% mutate(pontos = ifelse(resultado == "Vitória", 3,
+                                                ifelse(resultado == "Empate", 1, 0))) %>%
+        group_by(time) %>% arrange(rodada) %>% mutate(total = cumsum(pontos), vitorias = sum(resultado == "Vitória"), gols_marcados = cumsum(gols), gols_sof = cumsum(gols_sof), sg = gols_marcados - gols_sof)
 
+      timesApAno <- final %>% filter(arbitro == arbitros()) %>%
+        count(time) %>% arrange(-n) %>% rename("Jogos Apitados" = "n",
+                                               "Time" = "time")
+      timesApAno[1:5,]
+    }, striped = T)
+
+
+
+    ####################### FIm do árbitro ###############
     ##Mover o slide com as setas do teclado#######################
     id_tab = reactiveVal(1)
     observeEvent(input$keys, {
