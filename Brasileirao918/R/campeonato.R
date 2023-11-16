@@ -9,7 +9,8 @@ tab_campeonato <- fluidRow(column(2,
                       tableOutput("Posicoes8")
                       ),
                   column(6,
-                         h3("Evolução dos Times, ao longo das Rodadas")),
+                         h3("Evolução dos Times, ao longo das Rodadas"),
+                         imageOutput("gif")),
                   column(4,
                          h4("Análise de Público 1ª Metade"),
                          tableOutput("PubMetade0"),
@@ -41,12 +42,12 @@ library(gifski)
 ## Gols ############
 
 #da pra virar grafico
-GolsResRod <- brasileirao %>% filter(ano_campeonato == 2016) %>%
-  group_by(rodada) %>%
-  mutate(GolsTot = gols_mandante+gols_visitante) %>%
-  summarise(SomaGols = sum(GolsTot, na.rm = T),
-            MediaGols = mean(GolsTot, na.rm = T),
-            MaxGolsTot = max(GolsTot, na.rm = T))
+# GolsResRod <- brasileirao %>% filter(ano_campeonato == 2016) %>%
+#   group_by(rodada) %>%
+#   mutate(GolsTot = gols_mandante+gols_visitante) %>%
+#   summarise(SomaGols = sum(GolsTot, na.rm = T),
+#             MediaGols = mean(GolsTot, na.rm = T),
+#             MaxGolsTot = max(GolsTot, na.rm = T))
 
 # GolsResRod0 <- brasileirao %>% filter(ano_campeonato == 2016) %>%
 #   group_by(rodada) %>%
@@ -72,14 +73,14 @@ GolsResRod <- brasileirao %>% filter(ano_campeonato == 2016) %>%
 #             MaxGolsTot = max(MaxGolsTot))
 # GolsResRod <- rbind(GolsResRod0, GolsResRod1)
 
-GolsResCamp <- brasileirao %>% filter(ano_campeonato == 2016) %>%
-  group_by(rodada) %>%
-  mutate(GolsTot = gols_mandante+gols_visitante) %>%
-  summarise(SomaGols = sum(GolsTot, na.rm = T),
-            MediaGols = mean(GolsTot, na.rm = T),
-            MaxGolsTot = max(GolsTot, na.rm = T)) %>%
-  summarise(QuantidadeTotal = sum(SomaGols),
-            MediaTotal = mean(MediaGols))
+# GolsResCamp <- brasileirao %>% filter(ano_campeonato == 2016) %>%
+#   group_by(rodada) %>%
+#   mutate(GolsTot = gols_mandante+gols_visitante) %>%
+#   summarise(SomaGols = sum(GolsTot, na.rm = T),
+#             MediaGols = mean(GolsTot, na.rm = T),
+#             MaxGolsTot = max(GolsTot, na.rm = T)) %>%
+#   summarise(QuantidadeTotal = sum(SomaGols),
+#             MediaTotal = mean(MediaGols))
 
 # GolsPartMaior <- brasileirao %>% filter(ano_campeonato == 2016) %>%
 #   group_by(rodada) %>%
