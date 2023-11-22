@@ -16,10 +16,10 @@ app <- function(){
   tab_time <- time()
   tab_tecnico <- tecnic()
 
-  cores = c("#21A366", "#21A366", "#21A366", "#185C37", "#10793F",
-            "#10793F", "#185C37", "#10793F", "#3A3A3A", "white", "#33c481", "black")
+  cores = c("#3b5998", "#3b5998", "#3b5998", "#8b9dc3", "#3b5998",
+            "#3b5998", "#8b9dc3", "#3b5998", "#f0f0f0", "black", "red", "black")
 
-  ###Ignore
+  ###Ignore ####
   tosupress = paste0("a#ui-tab-",1:1000, collapse = ", ")
 
   aplica_tema = tags$head(tags$style(HTML(glue(.trim = FALSE, .open = " <", .close = " >", '
@@ -63,24 +63,9 @@ app <- function(){
 .right-side {
     background-color:  <cores[9] >;}
 
-/* FONTES, SE FOR MUDAR, MUDA TUDO DE UMA VEZ */
-.content-wrapper,
-.right-side, * {
-    color:  <cores[12] >;}
-.content-wrapper,
-.right-side, h1, h2, h3, h4, h5,
-.c1, .c2, .c3, .c4, .c5, .c6,
-.c7, .c8, .c9, .c10, .active{
-    color:  <cores[12] > !important;}
-.content-wrapper,
-.right-side,  <tosupress >{
-    color:  <cores[11] >;}
-.nav > li > a:focus, .nav > li > a:hover {
-    color:  <cores[9] >;
-    background-color:  <cores[9] >;}
-.nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
-    color:  <cores[9] >;
-    background-color:  <cores[9] >;}
+/* COR DAS LETRAS DA BARRA /*
+.skin-blue .main-sidebar .sidebar .sidebar-menu a {
+  color: white;}
 
 /* RAPOSO, NÃO TOQUE! */
 .form-control {
@@ -276,7 +261,8 @@ app <- function(){
       brasileirao %>%
         filter(ano_campeonato == Ano()) %>%
         count(arbitro) %>%
-        arrange(-n) %>% top_n(n, n = 3)
+        arrange(-n) %>% top_n(n, n = 3) %>%
+        rename("Partidas" = "n", "Arbitro" = "arbitro")
     }, striped = T)
 
     output$gif <- renderImage({
@@ -396,13 +382,13 @@ app <- function(){
     output$Posicoes8 <- renderTable({
       M <- brasileirao %>% filter(ano_campeonato == Ano(), rodada == 38) %>%
         select(time_mandante, colocacao_mandante) %>%
-        rename("Time" = "time_mandante", "Posicao" = "colocacao_mandante")
+        rename("Time" = "time_mandante", "Posição" = "colocacao_mandante")
       V <- brasileirao %>% filter(ano_campeonato == Ano(), rodada == 38) %>%
         select(time_visitante, colocacao_visitante) %>%
-        rename("Time" = "time_visitante", "Posicao" = "colocacao_visitante")
+        rename("Time" = "time_visitante", "Posição" = "colocacao_visitante")
 
       posi <- rbind(M, V) %>%
-        filter(!Posicao %in% c(5:16)) %>% arrange(Posicao)
+        filter(!`Posição` %in% c(5:16)) %>% arrange(`Posição`)
       posi
     }, striped = T)
 
