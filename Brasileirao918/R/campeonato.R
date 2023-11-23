@@ -25,8 +25,6 @@ campeonato <- function(){
          tableOutput("GolsResCamp"),
          h4("Partida(s) com maior Saldo de Gols"),
          tableOutput("GolsPartMaior")
-  )
-  # Conteúdo do Slide de Modelos aqui
-  )
+  ))
   return(list(tab_campeonato = tab_campeonato))
 }

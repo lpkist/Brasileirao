@@ -1,22 +1,21 @@
-time <- function(time = "Grêmio"){
-  library(tidyverse)
-  tab_time <- column(12,
+time <- function(){
+  #library(tidyverse)
+  tab_time <- fluidRow(column(3,
                      h1("Time"),
-                     selectInput(inputId = "times",
+                     selectInput(inputId = "times_f",
                                  label = "Selecione o time",
                                  choices = sort(unique(brasileirao$time_mandante)),
-                                 selected = time, multiple = F),
+                                 multiple = F),
+                     h4("Estatísticas por Partida do Time"),
+                     tableOutput("GolPartida"),
+                     tableOutput("MediaPub")),
                      column(6,
+                            h4("Valor do Time ao Longo do Tempo"),
                             plotlyOutput("valor_time", width = 500, height = 370)),
                      column(3,
                             h3("Estatísticas de Time"),
-                            tableOutput("MediaPub"),
-                            tableOutput("MaiorGolCasa")),
-                     column(3,
-                            tableOutput("MaiorGolFora"),
-                            # tableOutput('GolTempo'),
-                            #tableOutput('TaxaOcup'),
-                            tableOutput("GolPartida"))
+                            tableOutput("MaiorGolCasa"),
+                            tableOutput("MaiorGolFora"))
                      #    tableOutput("TotalPonto"),
                      #tableOutput("ChutesJogo"))
                      #tableOutput('ImpedJogo'))
@@ -74,3 +73,4 @@ time <- function(time = "Grêmio"){
   return(list(tab_time = tab_time))
 }
 
+#time = "Grêmio"
