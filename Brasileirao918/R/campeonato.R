@@ -4,7 +4,7 @@ campeonato <- function(){
                                     sliderInput(inputId = "Ano",
                                                 label = "Escolha um Ano:",
                                                 min = 2003, max = 2023,
-                                                value = 2013, step = 1),
+                                                value = 2013, step = 1, sep = ""),
                                     h4("Arbitros que mais Apitaram"),
                                     tableOutput("top3ArbApi"),
                                     h4("Colocação Final"),
