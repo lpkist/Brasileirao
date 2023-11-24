@@ -1,7 +1,7 @@
 #' @import tidyverse
 tecnic <- function(tecnico = "Renato Portaluppi"){
-  invisible(library(tidyverse))
-tab_tecnico <- fluidRow(column(5,
+suppressPackageStartupMessages(library(tidyverse))
+  tab_tecnico <- fluidRow(column(5,
                       h1("Técnico"),
                       selectInput(inputId = "tecnico",
                                   label = "Selecione o técnico",
