@@ -328,7 +328,7 @@ app <- function(){
         filter(ano_campeonato == Ano()) %>%
         count(arbitro) %>%
         arrange(-n) %>% top_n(n, n = 3) %>%
-        rename("Partidas" = "n", "Arbitro" = "arbitro")
+        rename("Partidas" = "n", "Árbitro" = "arbitro")
     }, striped = T, na = " ", align = 'c')
 
     output$gif <- renderImage({
@@ -421,7 +421,11 @@ app <- function(){
         summarise(MediaPublico = mean(MediaPublico),
                   PublicoTotal = sum(SomaTotPublico),
                   MaxPublico = max(MaxPublico),
-                  MinPublico = min(MinPublico))
+                  MinPublico = min(MinPublico)) %>%
+        rename("Média de Público" = "MediaPublico",
+               "Público Total" = "PublicoTotal",
+               "Maior Público" = "MaxPublico",
+               "Menor Público" = "MinPublico")
     }, striped = T, na = " ", align = 'c')
 
     output$PubMetade1 <- renderTable({
@@ -435,7 +439,11 @@ app <- function(){
         summarise(MediaPublico = mean(MediaPublico),
                   PublicoTotal = sum(SomaTotPublico),
                   MaxPublico = max(MaxPublico),
-                  MinPublico = min(MinPublico))
+                  MinPublico = min(MinPublico)) %>%
+        rename("Média de Público" = "MediaPublico",
+               "Público Total" = "PublicoTotal",
+               "Maior Público" = "MaxPublico",
+               "Menor Público" = "MinPublico")
     }, striped = T, na = " ", align = 'c')
 
     output$GolsResRod <- renderTable({
@@ -446,10 +454,13 @@ app <- function(){
                   MediaGols = mean(GolsTot, na.rm = T),
                   MaxGolsTot = max(GolsTot, na.rm = T)) %>%
         ungroup() %>% filter(rodada == c(1:19)) %>%
-        summarise(ParteCampeonato = c("1ªMetade"),
+        summarise(Fase = c("1ª Metade"),
                   GolsTotal = sum(SomaGols),
                   MediaGols = mean(MediaGols),
-                  MaxGolsTot = max(MaxGolsTot))
+                  MaxGolsTot = max(MaxGolsTot)) %>%
+        rename("Total de Gols" = "GolsTotal",
+               "Média de Gols" = "MediaGols",
+               "Máximo de Gols em uma Partida" = "MaxGolsTot")
       GolsResRod1 <- brasileirao %>% filter(ano_campeonato == Ano()) %>%
         group_by(rodada) %>%
         mutate(GolsTot = gols_mandante+gols_visitante) %>%
@@ -457,10 +468,13 @@ app <- function(){
                   MediaGols = mean(GolsTot, na.rm = T),
                   MaxGolsTot = max(GolsTot, na.rm = T)) %>%
         ungroup() %>% filter(rodada == c(20:38)) %>%
-        summarise(ParteCampeonato = c("2ªMetade"),
+        summarise(Fase = c("2ª Metade"),
                   GolsTotal = sum(SomaGols),
                   MediaGols = mean(MediaGols),
-                  MaxGolsTot = max(MaxGolsTot))
+                  MaxGolsTot = max(MaxGolsTot)) %>%
+        rename("Total de Gols" = "GolsTotal",
+               "Média de Gols" = "MediaGols",
+               "Máximo de Gols em uma Partida" = "MaxGolsTot")
       GolsResRod <- rbind(GolsResRod0, GolsResRod1)
       GolsResRod
     }, striped = T, na = " ", align = 'c')
@@ -473,7 +487,9 @@ app <- function(){
                   MediaGols = mean(GolsTot, na.rm = T),
                   MaxGolsTot = max(GolsTot, na.rm = T)) %>%
         summarise(QuantidadeTotal = sum(SomaGols),
-                  MediaTotal = mean(MediaGols))
+                  MediaTotal = mean(MediaGols)) %>%
+        rename("Soma Total de Gols" = "QuantidadeTotal",
+               "Média Total de Gols" = "MediaTotal")
     }, striped = T, na = " ", align = 'c')
 
     output$GolsPartMaior <- renderTable({
@@ -484,14 +500,21 @@ app <- function(){
         filter(GolsTot == max(MaxGolsTot)) %>% ungroup() %>%
         filter(MaxGolsTot == max(MaxGolsTot)) %>%
         select(rodada,time_mandante,gols_mandante,
-               gols_visitante,time_visitante)
+               gols_visitante,time_visitante) %>%
+        rename("Mandante" = "time_mandante",
+               "Gols Casa" = "gols_mandante",
+               "Gols Visitante" = "gols_visitante",
+               "Visitante" = "time_visitante")
     }, striped = T, na = " ", align = 'c')
+
     ########## Fim do Campeonato
     ################ Arbitro #######################
     output$GolsAp <- renderTable({brasileirao %>%
         filter(arbitro == arbitros()) %>%
         summarise(gols = sum(gols_mandante+gols_visitante),
-                  MediaGols = mean(gols_mandante+gols_visitante))
+                  MediaGols = mean(gols_mandante+gols_visitante)) %>%
+        rename("Gols Apitados" = "gols",
+               "Média de Gol por Partida" = "MediaGols")
     }, striped = T, na = " ", align = 'c')
 
     output$Top5EstAp <- renderPlot({
@@ -504,81 +527,23 @@ app <- function(){
         coord_flip()+
         labs(x = "Jogos Apitados", y = "Estádio")+theme_bw()
     })
+
     output$FaltasAp <- renderTable({
       brasileirao %>% filter(arbitro == arbitros()) %>%
         drop_na() %>%
         summarise(faltasTot = sum(faltas_mandante+faltas_visitante),
-                  faltasMedia = mean(faltas_mandante+faltas_visitante))
+                  faltasMedia = mean(faltas_mandante+faltas_visitante)) %>%
+        rename("Faltas Apitadas" = "faltasTot",
+               "Média de Faltas por Partida" = "faltasMedia")
     }, striped = T, na = " ", align = 'c')
 
     output$GolsApTemp <- renderTable({
       brasileirao %>% filter(arbitro == arbitros(),
                              ano_campeonato == Ano()) %>%
         summarise(gols = sum(gols_mandante+gols_visitante),
-                  MediaGols = mean(gols_mandante+gols_visitante))
-    }, striped = T, na = " ", align = 'c')
-    output$FaltasApTemp <- renderTable({
-      brasileirao %>% filter(arbitro == arbitros(),
-                             ano_campeonato == Ano()) %>%
-        drop_na() %>%
-        summarise(faltasTot = sum(faltas_mandante+faltas_visitante),
-                  faltasMedia = mean(faltas_mandante+faltas_visitante))
-    }, striped = T, na = " ", align = 'c')
-    output$TimesApTemp <- renderTable({
-      res <- brasileirao %>% filter(ano_campeonato == Ano()) %>%
-        mutate(resultado =
-                 ifelse(gols_mandante > gols_visitante,
-                        "Vitória",
-                        ifelse(gols_mandante == gols_visitante,
-                               "Empate", "Derrota"))) %>%
-        select(ano_campeonato, time_mandante, time_visitante, arbitro,
-               rodada, resultado, gols_mandante, gols_visitante)
-      M <- res %>% select(-time_visitante) %>% mutate(time = time_mandante, gols = gols_mandante, gols_sof = gols_visitante) %>%
-        select(-time_mandante, -gols_mandante, -gols_visitante)
-      V <- res %>% select(-time_mandante) %>%
-        mutate(resultado = ifelse(resultado == "Vitória", "Derrota",
-                                  ifelse(resultado == "Derrota", "Vitória", "Empate")),
-               time = time_visitante, gols = gols_visitante,
-               gols_sof = gols_mandante) %>% select(-time_visitante, -gols_visitante, -gols_mandante)
-      jogos <- rbind(M,V)
-      final <- jogos %>% mutate(pontos = ifelse(resultado == "Vitória", 3,
-                                                ifelse(resultado == "Empate", 1, 0))) %>%
-        group_by(time) %>% arrange(rodada) %>% mutate(total = cumsum(pontos), vitorias = sum(resultado == "Vitória"), gols_marcados = cumsum(gols), gols_sof = cumsum(gols_sof), sg = gols_marcados - gols_sof)
-
-      timesApAno <- final %>% filter(arbitro == arbitros()) %>%
-        count(time) %>% arrange(-n) %>% rename("Jogos Apitados" = "n",
-                                               "Time" = "time")
-      timesApAno[1:5,]
-    }, striped = T, na = " ", align = 'c')
-
-    output$GolsAp <- renderTable({brasileirao %>%
-        filter(arbitro == arbitros()) %>%
-        summarise(gols = sum(gols_mandante+gols_visitante),
-                  MediaGols = mean(gols_mandante+gols_visitante))
-    }, striped = T, na = " ", align = 'c')
-
-    output$Top5EstAp <- renderPlot({
-      top5est <- brasileirao %>%
-        filter(arbitro == arbitros()) %>%
-        count(estadio) %>% arrange(-n) %>% top_n(n, n = 5)
-      top5est[1:5,] %>%
-        ggplot(aes(x = estadio, y = n), fill = "blue")+
-        geom_bar(stat = "identity")+
-        labs(x = "Estadio", y = "Jogos Apitados")+theme_bw()
-    })
-
-    output$FaltasAp <- renderTable({
-      brasileirao %>% filter(arbitro == arbitros()) %>%
-        drop_na() %>%
-        summarise(faltasTot = sum(faltas_mandante+faltas_visitante),
-                  faltasMedia = mean(faltas_mandante+faltas_visitante))
-    }, striped = T, na = " ", align = 'c')
-
-    output$GolsApTemp <- renderTable({
-      brasileirao %>% filter(arbitro == arbitros(),
-                             ano_campeonato == Ano()) %>%
-        summarise(gols = sum(gols_mandante+gols_visitante),
-                  MediaGols = mean(gols_mandante+gols_visitante))
+                  MediaGols = mean(gols_mandante+gols_visitante)) %>%
+        rename("Gols Apitados" = "gols",
+               "Média de Gol por Partida" = "MediaGols")
     }, striped = T, na = " ", align = 'c')
 
     output$FaltasApTemp <- renderTable({
@@ -586,7 +551,9 @@ app <- function(){
                              ano_campeonato == Ano()) %>%
         drop_na() %>%
         summarise(faltasTot = sum(faltas_mandante+faltas_visitante),
-                  faltasMedia = mean(faltas_mandante+faltas_visitante))
+                  faltasMedia = mean(faltas_mandante+faltas_visitante))%>%
+        rename("Faltas Apitadas" = "faltasTot",
+               "Média de Faltas por Partida" = "faltasMedia")
     }, striped = T, na = " ", align = 'c')
 
     output$TimesApTemp <- renderTable({
@@ -615,6 +582,7 @@ app <- function(){
                                                "Time" = "time")
       timesApAno[1:5,]
     }, striped = T, na = " ", align = 'c')
+
     ######### FIm do árbitro ###############
     #######################  Time ##########################
     output$MediaPub <- renderTable({brasileirao %>%

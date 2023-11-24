@@ -1,12 +1,10 @@
 arbitro <- function(){
   tab_arbitro <- fluidRow(column(2,
                                  h1("Árbitro"),
-                                 p("Nesta aba exploraremos estatísticas de cada arbitro, com os dados históricos e por temporada"),
                                  selectInput(
                                    inputId = "arbitro",
                                    label = "Escolha o Árbitro:",
-                                   choices = unique(brasileirao$arbitro)
-                                 ),
+                                   choices = unique(brasileirao$arbitro)),
                                  sliderInput(inputId = "Ano",
                                              label = "Escolha um Ano:",
                                              min = 2003, max = 2023,
