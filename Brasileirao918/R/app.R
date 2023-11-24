@@ -203,6 +203,7 @@ app <- function(){
     time2 <- reactive(input$time2)
     periodo <- reactive(input$periodo_conf)
     Ano <- reactive(input$Ano)
+    AnoArbitro <- reactive(input$AnoArbitro)
     arbitros <- reactive(input$arbitro)
     times_f <- reactive(input$times_f)
 
@@ -539,16 +540,15 @@ app <- function(){
 
     output$GolsApTemp <- renderTable({
       brasileirao %>% filter(arbitro == arbitros(),
-                             ano_campeonato == Ano()) %>%
+                             ano_campeonato == AnoArbitro()) %>%
         summarise(gols = sum(gols_mandante+gols_visitante),
                   MediaGols = mean(gols_mandante+gols_visitante)) %>%
         rename("Gols Apitados" = "gols",
                "Média de Gol por Partida" = "MediaGols")
     }, striped = T, na = " ", align = 'c')
-
-    output$FaltasApTemp <- renderTable({
+output$FaltasApTemp <- renderTable({
       brasileirao %>% filter(arbitro == arbitros(),
-                             ano_campeonato == Ano()) %>%
+                             ano_campeonato == AnoArbitro()) %>%
         drop_na() %>%
         summarise(faltasTot = sum(faltas_mandante+faltas_visitante),
                   faltasMedia = mean(faltas_mandante+faltas_visitante))%>%
@@ -557,7 +557,7 @@ app <- function(){
     }, striped = T, na = " ", align = 'c')
 
     output$TimesApTemp <- renderTable({
-      res <- brasileirao %>% filter(ano_campeonato == Ano()) %>%
+      res <- brasileirao %>% filter(ano_campeonato == AnoArbitro()) %>%
         mutate(resultado =
                  ifelse(gols_mandante > gols_visitante,
                         "Vitória",
@@ -582,7 +582,6 @@ app <- function(){
                                                "Time" = "time")
       timesApAno[1:5,]
     }, striped = T, na = " ", align = 'c')
-
     ######### FIm do árbitro ###############
     #######################  Time ##########################
     output$MediaPub <- renderTable({brasileirao %>%
