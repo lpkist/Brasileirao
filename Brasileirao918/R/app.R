@@ -455,7 +455,7 @@ app <- function(){
                   MediaGols = mean(GolsTot, na.rm = T),
                   MaxGolsTot = max(GolsTot, na.rm = T)) %>%
         ungroup() %>% filter(rodada == c(1:19)) %>%
-        summarise(Fase = c("1ª Metade"),
+        summarise(Fase = c("1º Turno"),
                   GolsTotal = sum(SomaGols),
                   MediaGols = mean(MediaGols),
                   MaxGolsTot = max(MaxGolsTot)) %>%
@@ -469,7 +469,7 @@ app <- function(){
                   MediaGols = mean(GolsTot, na.rm = T),
                   MaxGolsTot = max(GolsTot, na.rm = T)) %>%
         ungroup() %>% filter(rodada == c(20:38)) %>%
-        summarise(Fase = c("2ª Metade"),
+        summarise(Fase = c("2º Turno"),
                   GolsTotal = sum(SomaGols),
                   MediaGols = mean(MediaGols),
                   MaxGolsTot = max(MaxGolsTot)) %>%
