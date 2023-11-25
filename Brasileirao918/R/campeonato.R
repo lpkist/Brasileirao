@@ -5,7 +5,7 @@ campeonato <- function(){
                                                 label = "Escolha um Ano:",
                                                 min = 2003, max = 2023,
                                                 value = 2013, step = 1, sep = ""),
-                                    h4("Arbitros que mais Apitaram"),
+                                    h4("Árbitros que mais Apitaram"),
                                     tableOutput("top3ArbApi"),
                                     h4("Colocação Final"),
                                     p("4 Primeiros e os 4 Rebaixados"),
@@ -23,7 +23,7 @@ campeonato <- function(){
          tableOutput("GolsResRod"),
          h4("Análise de Gols do Campeonato Completo"),
          tableOutput("GolsResCamp"),
-         h4("Partida(s) com maior Saldo de Gols"),
+         h4("Partida(s) com maior Quantidade de Gols"),
          tableOutput("GolsPartMaior")
   ))
   return(list(tab_campeonato = tab_campeonato))
