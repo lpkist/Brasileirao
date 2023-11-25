@@ -13,10 +13,9 @@
 #' @export
 
 salva_app <- function(name, token, secret, fpath, app_name){
-  setwd(fpath)
   setAccountInfo(name = name,
                  token = token,
                  secret = secret)
-  deployApp(appName = app_name)
+  deployApp(appName = app_name, appDir = fpath)
   print("App salvo com sucesso!")
 }
