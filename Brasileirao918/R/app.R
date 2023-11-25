@@ -196,7 +196,7 @@ app <- function(){
                `São Paulo` = "#fe0000",
                `Sport Recife` = "#ffd900",
                `Vasco da Gama` = "black")
-######### Defina aqui suas variáveis reativas BOTOES -------------------------------------
+    ######### Defina aqui suas variáveis reativas BOTOES -------------------------------------
 
     tecnicos <- reactive(input$tecnico)
     time1 <- reactive(input$time1)
@@ -209,12 +209,12 @@ app <- function(){
 
     ################# Atualiza times #####
     observe({
-    times <- unique(brasileirao$time_visitante)
+      times <- unique(brasileirao$time_visitante)
 
-          # Change values for input$inSelect
-          updateSelectInput(session, "time2", choices = times[times != time1()], selected = time2())
+      # Change values for input$inSelect
+      updateSelectInput(session, "time2", choices = times[times != time1()], selected = time2())
       updateSelectInput(session, "time1", choices = times[times != time2()], selected = time1())
-})
+    })
 
 
     ######### Confrontos ###################
@@ -238,8 +238,8 @@ app <- function(){
 
       conf_df <- rbind(MV, VM)
       conf_df %>% mutate(resultado = factor(resultado,
-                                                         levels = c("Vitória", "Empate", "Derrota"),
-                                                         labels = c(paste("Vitórias do", time1()), "Empates", paste("Vitórias do", time2())), ordered = T)) %>%
+                                            levels = c("Vitória", "Empate", "Derrota"),
+                                            labels = c(paste("Vitórias do", time1()), "Empates", paste("Vitórias do", time2())), ordered = T)) %>%
         group_by(resultado) %>% summarise(n = n()) %>% pivot_wider(names_from = "resultado", values_from = "n")
     }, striped = T, na = " ", align = 'c')
 
@@ -264,10 +264,10 @@ app <- function(){
 
       conf_df <- rbind(MV, VM)
       aux <- conf_df %>% summarise(gols1 = sum(gols_mandante),
-                            gols2 = sum(gols_visitante))
-    colnames(aux) <- c(paste("Gols do", time1()), paste("Gols do", time2()))
+                                   gols2 = sum(gols_visitante))
+      colnames(aux) <- c(paste("Gols do", time1()), paste("Gols do", time2()))
       aux
-      }, striped = T, na = " ", align = 'c')
+    }, striped = T, na = " ", align = 'c')
     output$jogos_s_gols <- renderTable({
       res <- brasileirao %>% mutate(resultado =
                                       ifelse(gols_mandante > gols_visitante,
@@ -294,7 +294,7 @@ app <- function(){
       aux
     }, striped = T, na = " ", align = 'c')
 
-####################### FIm do confrontos ###############
+    ####################### FIm do confrontos ###############
 
     ######### Tecnico #####
 
@@ -507,7 +507,7 @@ app <- function(){
                "  " = "gols_mandante",
                " " = "gols_visitante",
                "Visitante" = "time_visitante",
-              "Rodada" = 'rodada')
+               "Rodada" = 'rodada')
     }, striped = T, na = " ", align = 'c')
 
     ########## Fim do Campeonato
@@ -548,7 +548,7 @@ app <- function(){
         rename("Gols Apitados" = "gols",
                "Média de Gol por Partida" = "MediaGols")
     }, striped = T, na = " ", align = 'c')
-output$FaltasApTemp <- renderTable({
+    output$FaltasApTemp <- renderTable({
       brasileirao %>% filter(arbitro == arbitros(),
                              ano_campeonato == AnoArbitro()) %>%
         drop_na() %>%
@@ -595,16 +595,24 @@ output$FaltasApTemp <- renderTable({
         filter(time_mandante == times_f()) %>%
         mutate(MaxGol_Casa = max(gols_mandante,na.rm=T)) %>%
         filter(gols_mandante == MaxGol_Casa) %>%
-        summarise('Máximo de Gols Mandante' = MaxGol_Casa, Ano = ano_campeonato,
-                  Contra = time_visitante)
+        summarise( Ano = ano_campeonato,
+                   Mandante = time_mandante,
+                   ' ' = gols_mandante,
+                   Placar = "X",
+                   '  ' = gols_visitante,
+                   Visitante = time_visitante)
     }, striped = T, na = " ", align = 'c')
 
     output$MaiorGolFora <- renderTable({brasileirao %>%
         filter(time_visitante == times_f()) %>%
         mutate(MaxGol_Fora = max(gols_visitante,na.rm=T)) %>%
         filter(gols_visitante == MaxGol_Fora) %>%
-        summarise('Máximo de Gols Visitante' = MaxGol_Fora, Ano = ano_campeonato,
-                  Contra = time_mandante)
+        summarise(Ano = ano_campeonato,
+                  Mandante = time_mandante,
+                  ' ' = gols_mandante,
+                  Placar = "X",
+                  '  ' = gols_visitante,
+                  Visitante = time_visitante)
     }, striped = T, na = " ", align = 'c')
 
     output$GolPartida <- renderTable({
@@ -631,30 +639,30 @@ output$FaltasApTemp <- renderTable({
     }
     })
     ####################### Fim do Time ##########################
-    
+
     ########################### Geral ############################
     output$Pub_total <- renderTable({brasileirao %>% summarise('Público_Total' = sum(publico, na.rm=T),
                                                                'Média_Público' = mean(publico, na.rm=T))},
                                     striped = T, na = " ", align = 'c')
-    
+
     output$Gols_total <- renderTable({brasileirao %>% summarise('Total Mandante' = sum(gols_mandante,na.rm=T),
                                                                 'Total Visitante' = sum(gols_visitante,na.rm=T))},
                                      striped = T, na = " ", align = 'c')
-    
+
     output$Ano_gols_max <- renderTable({brasileirao %>% group_by(ano_campeonato) %>%
         mutate('Gols_ano' = sum(c(gols_mandante,gols_visitante),na.rm = T)) %>%
         select(Gols_ano) %>%
         ungroup() %>% filter(Gols_ano == max(Gols_ano)) %>%
         distinct() %>% summarise('Máximo de Gols' = Gols_ano[1],'Ano' = ano_campeonato[1])},
         striped = T, na = " ", align = 'c')
-    
+
     output$Ano_gols_min <- renderTable({brasileirao %>% group_by(ano_campeonato) %>%
         mutate('Gols_ano' = sum(c(gols_mandante,gols_visitante),na.rm = T)) %>%
         select(Gols_ano) %>%
         ungroup() %>% filter(Gols_ano == min(Gols_ano)) %>%
         distinct() %>% summarise('Mínimo de Gols' = Gols_ano[1],'Ano' = ano_campeonato[1])},
         striped = T, na = " ", align = 'c')
-    
+
     output$Time_valor_min <- renderTable({brasileirao %>% group_by(time_mandante) %>%
         filter(valor_equipe_titular_mandante != is.na(valor_equipe_titular_mandante)) %>%
         ungroup() %>% select(ano_campeonato, time_mandante, valor_equipe_titular_mandante) %>%
@@ -662,7 +670,7 @@ output$FaltasApTemp <- renderTable({
         distinct() %>% rename('Time' = 'time_mandante',
                               'Valor do Time' = 'valor_equipe_titular_mandante', 'Ano' = 'ano_campeonato')},
         striped = T, na = " ", align = 'c')
-    
+
     output$Time_valor_max <- renderTable({brasileirao %>% group_by(time_mandante) %>%
         filter(valor_equipe_titular_mandante != is.na(valor_equipe_titular_mandante)) %>%
         ungroup() %>% select(ano_campeonato, time_mandante, valor_equipe_titular_mandante) %>%
@@ -671,22 +679,22 @@ output$FaltasApTemp <- renderTable({
                                'Valor do Time' = 'valor_equipe_titular_mandante',
                                'Ano' = 'ano_campeonato')},
         striped = T, na = " ", align = 'c')
-    
+
     output$valor_times <- renderPlotly({banco <- brasileirao %>%
       group_by(ano_campeonato,time_mandante) %>% arrange(desc(data)) %>%
       select(time_mandante,ano_campeonato,valor_equipe_titular_mandante) %>%
       distinct(time_mandante,.keep_all = T) %>% ungroup() %>% group_by(ano_campeonato) %>%
       summarise('Valor_Total' = sum(valor_equipe_titular_mandante,na.rm = T)) %>%
       rename('Ano' = 'ano_campeonato')
-    
+
     banco <- banco %>% summarise(Ano,'Valor_Total' = Valor_Total/1000000)
-    
+
     plot_valor <- ggplotly(ggplot(banco)+
                              geom_line(aes(x = Ano,y = Valor_Total),color = '#3b5998')+theme_bw()+
                              scale_y_continuous(name = 'Valor Total (em Milhões)'))
     })
     ###################### Fim do Geral ##########################
-    
+
     ##Mover o slide com as setas do teclado#######################
     id_tab = reactiveVal(1)
     observeEvent(input$keys, {
@@ -715,6 +723,5 @@ output$FaltasApTemp <- renderTable({
   #### GERAR DASHBOARD #######################################
   shinyApp(ui = ui, server = server)
 }
-
 
 
