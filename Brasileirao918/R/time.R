@@ -1,25 +1,27 @@
 time <- function(){
   #library(tidyverse)
-  tab_time <- fluidRow(column(3,
-                     h1("Time"),
-                     selectInput(inputId = "times_f",
-                                 label = "Selecione o time",
-                                 choices = sort(unique(brasileirao$time_mandante)),
-                                 multiple = F),
-                     h4("Estatísticas por Partida do Time"),
-                     tableOutput("GolPartida"),
-                     tableOutput("MediaPub")),
-                     column(6,
-                            h4("Valor do Time ao Longo do Tempo"),
-                            plotlyOutput("valor_time", width = 500, height = 370)),
-                     column(3,
-                            h3("Estatísticas de Time"),
-                            tableOutput("MaiorGolCasa"),
-                            tableOutput("MaiorGolFora"))
-                     #    tableOutput("TotalPonto"),
-                     #tableOutput("ChutesJogo"))
-                     #tableOutput('ImpedJogo'))
-                     # Conteúdo do Slide de Modelos aqui
+  tab_time <- fluidRow(column(2,
+                              h1("Time"),
+                              selectInput(inputId = "times_f",
+                                          label = "Selecione o time",
+                                          choices = sort(unique(brasileirao$time_mandante)),
+                                          multiple = F),
+                              h4("Estatísticas por Partida do Time"),
+                              tableOutput("GolPartida"),
+                              tableOutput("MediaPub")),
+                       column(5,
+                              h4("Valor do Time ao Longo do Tempo"),
+                              plotlyOutput("valor_time", width = 450, height = 370)),
+                       column(5,
+                              h3("Maiores goleadas aplicadas"),
+                              h4("Mandante"),
+                              tableOutput("MaiorGolCasa"),
+                              h4("Visitante"),
+                              tableOutput("MaiorGolFora"))
+                       #    tableOutput("TotalPonto"),
+                       #tableOutput("ChutesJogo"))
+                       #tableOutput('ImpedJogo'))
+                       # Conteúdo do Slide de Modelos aqui
   )
 
 
@@ -72,4 +74,3 @@ time <- function(){
 
   return(list(tab_time = tab_time))
 }
-
