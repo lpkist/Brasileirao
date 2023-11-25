@@ -73,4 +73,3 @@ time <- function(){
   return(list(tab_time = tab_time))
 }
 
-#time = "Grêmio"
