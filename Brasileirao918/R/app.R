@@ -210,10 +210,12 @@ app <- function(){
     ################# Atualiza times #####
     observe({
       times <- unique(brasileirao$time_visitante)
-
-      # Change values for input$inSelect
-      updateSelectInput(session, "time2", choices = times[times != time1()], selected = time2())
-      updateSelectInput(session, "time1", choices = times[times != time2()], selected = time1())
+      updateSelectInput(session, "time2",
+                        choices = times[times != time1()],
+                        selected = time2())
+      updateSelectInput(session, "time1",
+                        choices = times[times != time2()],
+                        selected = time1())
     })
 
 
@@ -633,9 +635,9 @@ app <- function(){
     colnames(time_data)[14] <- c('Valor_do_time')
     if(length(time_data > 0)){
       plot_valores <- ggplotly(
-        ggplot(time_data, aes(x = data, y = Valor_do_time)) +
+        ggplot(time_data, aes(x = data, y = Valor_do_time/1e6)) +
           geom_line(color = '#3b5998') +
-          scale_y_continuous(name = 'Valor do time')+theme_bw())
+          scale_y_continuous(name = 'Valor do time (em Milhões)')+theme_bw())
     }
     })
     ####################### Fim do Time ##########################
