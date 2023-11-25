@@ -1,15 +1,24 @@
 #' @import tidyverse
-tecnic <- function(tecnico = c("Renato Portaluppi","Renato Gaúcho")){
-  library(tidyverse)
-tab_tecnico <- column(12,
+tecnic <- function(tecnico = "Renato Portaluppi"){
+suppressPackageStartupMessages(library(tidyverse))
+  tab_tecnico <- fluidRow(column(5,
                       h1("Técnico"),
                       selectInput(inputId = "tecnico",
-                                  label = "Selecione todos os nomes que se aplicam ao técnico",
-                                  choices = sort(unique(rbind(brasileirao$tecnico_mandante, brasileirao$tecnico_visitante))),
+                                  label = "Selecione o técnico",
+                                  choices = sort(
+                                    unique(rbind(brasileirao$tecnico_mandante,
+                                                 brasileirao$tecnico_visitante))),
                                   selected = tecnico, multiple = T),
-                      plotOutput("top_pontos", width = 600, height = 450),
-                      plotOutput("top_aproveitamentos", width = 600, height = 450)
-                      # Conteúdo do Slide de Modelos aqui
+                      h4("Análise de Gols como Mandante"),
+                      tableOutput("tmn"),
+                      h4("Análise de Gols como Visitante"),
+                      tableOutput("tvs")),
+                      column(7,
+                      h4("Total de Pontos por Time Treinado"),
+                      plotOutput("top_pontos"),
+                      h4("Aproveitamento por Time Treinado"),
+                      plotOutput("top_aproveitamentos")
+)
 )
 
 corBr <- c(`América-MG` = "#007f4e",
