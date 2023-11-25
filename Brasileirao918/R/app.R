@@ -497,14 +497,15 @@ app <- function(){
       brasileirao %>% filter(ano_campeonato == Ano()) %>%
         group_by(rodada) %>%
         mutate(GolsTot = gols_mandante+gols_visitante) %>%
-        mutate(MaxGolsTot = max(GolsTot, na.rm = T)) %>%
+        mutate(MaxGolsTot = max(GolsTot, na.rm = T),
+               Placar = rep("x")) %>%
         filter(GolsTot == max(MaxGolsTot)) %>% ungroup() %>%
         filter(MaxGolsTot == max(MaxGolsTot)) %>%
-        select(rodada,time_mandante,gols_mandante,
+        select(rodada,time_mandante,gols_mandante, Placar,
                gols_visitante,time_visitante) %>%
         rename("Mandante" = "time_mandante",
-               "Gols Casa" = "gols_mandante",
-               "Gols Visitante" = "gols_visitante",
+               "  " = "gols_mandante",
+               " " = "gols_visitante",
                "Visitante" = "time_visitante")
     }, striped = T, na = " ", align = 'c')
 
