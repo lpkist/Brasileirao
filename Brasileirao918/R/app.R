@@ -506,7 +506,8 @@ app <- function(){
         rename("Mandante" = "time_mandante",
                "  " = "gols_mandante",
                " " = "gols_visitante",
-               "Visitante" = "time_visitante")
+               "Visitante" = "time_visitante",
+              "Rodada" = 'rodada')
     }, striped = T, na = " ", align = 'c')
 
     ########## Fim do Campeonato
