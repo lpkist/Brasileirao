@@ -94,7 +94,7 @@ app <- function(){
         menuItem("Geral", tabName = "Geral")
       )
     ),
-    #### Body #####################################################
+    #### Body ##################
     dashboardBody(
       aplica_tema,
       tabItems(
@@ -629,6 +629,62 @@ output$FaltasApTemp <- renderTable({
     }
     })
     ####################### Fim do Time ##########################
+    
+    ########################### Geral ############################
+    output$Pub_total <- renderTable({brasileirao %>% summarise('Público_Total' = sum(publico, na.rm=T),
+                                                               'Média_Público' = mean(publico, na.rm=T))},
+                                    striped = T, na = " ", align = 'c')
+    
+    output$Gols_total <- renderTable({brasileirao %>% summarise('Total Mandante' = sum(gols_mandante,na.rm=T),
+                                                                'Total Visitante' = sum(gols_visitante,na.rm=T))},
+                                     striped = T, na = " ", align = 'c')
+    
+    output$Ano_gols_max <- renderTable({brasileirao %>% group_by(ano_campeonato) %>%
+        mutate('Gols_ano' = sum(c(gols_mandante,gols_visitante),na.rm = T)) %>%
+        select(Gols_ano) %>%
+        ungroup() %>% filter(Gols_ano == max(Gols_ano)) %>%
+        distinct() %>% summarise('Máximo de Gols' = Gols_ano[1],'Ano' = ano_campeonato[1])},
+        striped = T, na = " ", align = 'c')
+    
+    output$Ano_gols_min <- renderTable({brasileirao %>% group_by(ano_campeonato) %>%
+        mutate('Gols_ano' = sum(c(gols_mandante,gols_visitante),na.rm = T)) %>%
+        select(Gols_ano) %>%
+        ungroup() %>% filter(Gols_ano == min(Gols_ano)) %>%
+        distinct() %>% summarise('Mínimo de Gols' = Gols_ano[1],'Ano' = ano_campeonato[1])},
+        striped = T, na = " ", align = 'c')
+    
+    output$Time_valor_min <- renderTable({brasileirao %>% group_by(time_mandante) %>%
+        filter(valor_equipe_titular_mandante != is.na(valor_equipe_titular_mandante)) %>%
+        ungroup() %>% select(ano_campeonato, time_mandante, valor_equipe_titular_mandante) %>%
+        filter(valor_equipe_titular_mandante == min(valor_equipe_titular_mandante)) %>%
+        distinct() %>% rename('Time' = 'time_mandante',
+                              'Valor do Time' = 'valor_equipe_titular_mandante', 'Ano' = 'ano_campeonato')},
+        striped = T, na = " ", align = 'c')
+    
+    output$Time_valor_max <- renderTable({brasileirao %>% group_by(time_mandante) %>%
+        filter(valor_equipe_titular_mandante != is.na(valor_equipe_titular_mandante)) %>%
+        ungroup() %>% select(ano_campeonato, time_mandante, valor_equipe_titular_mandante) %>%
+        filter(valor_equipe_titular_mandante == max(valor_equipe_titular_mandante)) %>%
+        distinct() %>%  rename('Time' = 'time_mandante',
+                               'Valor do Time' = 'valor_equipe_titular_mandante',
+                               'Ano' = 'ano_campeonato')},
+        striped = T, na = " ", align = 'c')
+    
+    output$valor_times <- renderPlotly({banco <- brasileirao %>%
+      group_by(ano_campeonato,time_mandante) %>% arrange(desc(data)) %>%
+      select(time_mandante,ano_campeonato,valor_equipe_titular_mandante) %>%
+      distinct(time_mandante,.keep_all = T) %>% ungroup() %>% group_by(ano_campeonato) %>%
+      summarise('Valor_Total' = sum(valor_equipe_titular_mandante,na.rm = T)) %>%
+      rename('Ano' = 'ano_campeonato')
+    
+    banco <- banco %>% summarise(Ano,'Valor_Total' = Valor_Total/1000000)
+    
+    plot_valor <- ggplotly(ggplot(banco)+
+                             geom_line(aes(x = Ano,y = Valor_Total),color = '#3b5998')+theme_bw()+
+                             scale_y_continuous(name = 'Valor Total (em Milhões)'))
+    })
+    ###################### Fim do Geral ##########################
+    
     ##Mover o slide com as setas do teclado#######################
     id_tab = reactiveVal(1)
     observeEvent(input$keys, {
@@ -657,4 +713,6 @@ output$FaltasApTemp <- renderTable({
   #### GERAR DASHBOARD #######################################
   shinyApp(ui = ui, server = server)
 }
+
+
 
