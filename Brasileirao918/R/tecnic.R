@@ -2,7 +2,7 @@
 #' @import shinydashboard
 #' @import tidyverse
 tecnic <- function(tecnico = "Renato Portaluppi"){
-  #suppressPackageStartupMessages(library(tidyverse))
+  suppressPackageStartupMessages(library(tidyverse))
   tab_tecnico <- fluidRow(column(5,
                                  h1("Técnico"),
                                  selectInput(inputId = "tecnico",
