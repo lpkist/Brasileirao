@@ -1,6 +1,8 @@
+#' @import shiny
+#' @import shinydashboard
 arbitro <- function(){
-  suppressPackageStartupMessages(library(shiny))
-  suppressPackageStartupMessages(library(shinydashboard))
+  # suppressPackageStartupMessages(library(shiny))
+  # suppressPackageStartupMessages(library(shinydashboard))
   tab_arbitro <- fluidRow(column(2,
                                  h1("Árbitro"),
                                  selectInput(

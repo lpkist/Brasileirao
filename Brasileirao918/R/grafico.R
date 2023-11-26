@@ -44,7 +44,7 @@ grafico <- function(dados, x=NULL, y = NULL, color = NULL, fill = NULL, group = 
   tema <- tema%%length(temas)
   tema <- ifelse(tema == 0, length(temas), tema)
   if(tema != 1){
-  base <- base+temas[[tema]]
+    base <- base+temas[[tema]]
   }
   base
 }

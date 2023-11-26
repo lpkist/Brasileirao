@@ -6,7 +6,9 @@
 #' @import plotly
 #' @import gganimate
 #' @import gifski
-
+#' @title Gerador do dashboard em shiny
+#' @description
+#' Esta função gera o dashboard em shiny que foi desenvolvido para visualizar os dados das partidas do Brasileirão de pontos corridos
 #' @export
 app <- function(){
   tab_arbitro <- arbitro()
@@ -725,5 +727,4 @@ app <- function(){
   #### GERAR DASHBOARD #######################################
   shinyApp(ui = ui, server = server)
 }
-
 

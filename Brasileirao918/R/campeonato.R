@@ -1,3 +1,5 @@
+#' @import shiny
+#' @import shinydashboard
 campeonato <- function(){
   tab_campeonato <- fluidRow(column(2,
                                     h1("Campeonato"),
