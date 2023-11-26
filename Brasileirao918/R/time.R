@@ -1,5 +1,6 @@
 #' @import shiny
 #' @import shinydashboard
+#' @import tidyverse
 time <- function(){
   tab_time <- fluidRow(column(2,
                               h1("Time"),
