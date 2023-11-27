@@ -640,7 +640,8 @@ app <- function(){
       plot_valores <- ggplotly(
         ggplot(time_data, aes(x = data, y = Valor_do_time/1e6)) +
           geom_line(color = '#3b5998') +
-          scale_y_continuous(name = 'Valor do time (em Milhões)')+theme_bw())
+          scale_y_continuous(name = 'Valor do time (em Milhões)')+theme_bw())+
+      labs(x = "Data")
     }
     })
     ####################### Fim do Time ##########################
