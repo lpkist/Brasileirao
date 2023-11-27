@@ -646,8 +646,8 @@ app <- function(){
     ####################### Fim do Time ##########################
 
     ########################### Geral ############################
-    output$Pub_total <- renderTable({brasileirao %>% summarise('Público_Total' = sum(publico, na.rm=T),
-                                                               'Média_Público' = mean(publico, na.rm=T))},
+    output$Pub_total <- renderTable({brasileirao %>% summarise('Público Total' = sum(publico, na.rm=T),
+                                                               'Média Público' = mean(publico, na.rm=T))},
                                     striped = T, na = " ", align = 'c')
 
     output$Gols_total <- renderTable({brasileirao %>% summarise('Total Mandante' = sum(gols_mandante,na.rm=T),
