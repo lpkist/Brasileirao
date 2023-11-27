@@ -6,7 +6,7 @@ tecnic <- function(tecnico = "Renato Portaluppi"){
   tab_tecnico <- fluidRow(column(5,
                                  h1("Técnico"),
                                  selectInput(inputId = "tecnico",
-                                             label = "Selecione o técnico",
+                                             label = "Selecione todos os nomes que se aplicam ao técnico",
                                              choices = sort(
                                                unique(rbind(brasileirao$tecnico_mandante,
                                                             brasileirao$tecnico_visitante))),
