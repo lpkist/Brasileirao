@@ -532,7 +532,8 @@ app <- function(){
         ggplot(aes(x = estadio, y = n))+
         geom_bar(stat = "identity", fill = "#3b5998")+
         coord_flip()+
-        labs(x = "Jogos Apitados", y = "Estádio")+theme_bw()
+        labs(x = "Jogos Apitados", y = "Estádio")+theme_bw()+
+        theme(axis.text=element_text(size=12))
     })
 
     output$FaltasAp <- renderTable({
